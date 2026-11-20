@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "checked": "2026-11-20",
+  "note": "Curated starting list. 'checked' means the repository URL answered git ls-remote on that date. It is not a safety review. Contents, licence and scripts are read from the fetched source at preview time.",
+  "packs": [
+    {
+      "id": "anthropic-skills",
+      "title": "Anthropic Skills",
+      "publisher": "Anthropic",
+      "repo": "https://github.com/anthropics/skills",
+      "kind": "skills",
+      "summary": "Anthropic's public skill collection, including Frontend Design, document skills and skill-authoring guides.",
+      "tags": ["design", "documents", "official"]
+    },
+    {
+      "id": "impeccable",
+      "title": "Impeccable",
+      "publisher": "Paul Bakaus",
+      "repo": "https://github.com/pbakaus/impeccable",
+      "kind": "skills",
+      "summary": "Design direction, critique, polish and audit commands for frontend work. Ships a helper launcher script.",
+      "tags": ["design", "review"]
+    },
+    {
+      "id": "taste-skill",
+      "title": "Taste",
+      "publisher": "Leonxlnx",
+      "repo": "https://github.com/Leonxlnx/taste-skill",
+      "kind": "skills",
+      "summary": "Art direction for websites and app screens, with a researched library of directions and a screenshot review loop.",
+      "tags": ["design"]
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "title": "UI UX Pro Max",
+      "publisher": "nextlevelbuilder",
+      "repo": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "kind": "skills",
+      "summary": "Searchable data on styles, palettes, font pairings and UX guidelines, queried through bundled scripts.",
+      "tags": ["design", "reference"]
+    },
+    {
+      "id": "superpowers",
+      "title": "Superpowers",
+      "publisher": "Jesse Vincent",
+      "repo": "https://github.com/obra/superpowers",
+      "kind": "skills",
+      "summary": "Process skills for planning, test-driven development, debugging and code review.",
+      "tags": ["workflow", "testing"]
+    },
+    {
+      "id": "vercel-agent-skills",
+      "title": "Vercel Agent Skills",
+      "publisher": "Vercel",
+      "repo": "https://github.com/vercel-labs/agent-skills",
+      "kind": "skills",
+      "summary": "React and Next.js performance guidance, composition patterns and interface review rules.",
+      "tags": ["react", "performance"]
+    },
+    {
+      "id": "ponytail",
+      "title": "Ponytail",
+      "publisher": "Dietrich Gebert",
+      "repo": "https://github.com/DietrichGebert/ponytail",
+      "kind": "plugin",
+      "summary": "Keeps solutions short and dependency-free. Distributed as a plugin with hooks, so it installs through your host's plugin command rather than as loose skills.",
+      "tags": ["workflow"],
+      "installNote": "Follow the repository's install instructions for your host. Agent Compass previews its skills but does not install plugins or hooks."
+    }
+  ]
+}

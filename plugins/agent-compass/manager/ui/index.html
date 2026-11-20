@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Agent Compass</title>
+<link rel="icon" href="mark.svg" type="image/svg+xml">
+<link rel="preload" href="departure-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="app" id="app" data-view="installed">
+  <header class="bar">
+    <div class="brand">
+      <img src="mark.svg" alt="" width="22" height="22">
+      <span>Agent Compass</span>
+    </div>
+    <nav class="views" aria-label="Views">
+      <button class="view-tab" type="button" data-view="installed" aria-current="page"><span class="kc" data-key="1">1</span>Installed <span class="count" id="count-installed"></span></button>
+      <button class="view-tab" type="button" data-view="packs"><span class="kc" data-key="2">2</span>Packs</button>
+      <button class="view-tab" type="button" data-view="history"><span class="kc" data-key="3">3</span>History</button>
+    </nav>
+    <label class="search">
+      <span class="visually-hidden">Search skills</span>
+      <svg class="search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.4 10.4 14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input id="search" type="search" placeholder="Search names and descriptions" autocomplete="off" spellcheck="false">
+      <span class="kc" data-key="/" aria-hidden="true">/</span>
+    </label>
+  </header>
+
+  <div class="body">
+    <aside class="rail" id="rail" aria-label="Filters"></aside>
+
+    <main class="list-wrap" id="main">
+      <div class="list-head" id="list-head"></div>
+      <div class="list" id="list" role="listbox" aria-label="Skills" tabindex="0"></div>
+    </main>
+
+    <section class="detail" id="detail" aria-live="polite" aria-label="Details"></section>
+  </div>
+
+  <footer class="keys" aria-label="Keyboard shortcuts">
+    <span class="keyhint"><span class="kc" data-key="ArrowUp">↑</span><span class="kc" data-key="ArrowDown">↓</span>Move</span>
+    <span class="keyhint"><span class="kc" data-key="/">/</span>Search</span>
+    <span class="keyhint"><span class="kc" data-key="1">1</span><span class="kc" data-key="2">2</span><span class="kc" data-key="3">3</span>Views</span>
+    <span class="keyhint"><span class="kc" data-key="c">C</span><span class="kc" data-key="x">X</span>Use in Claude / Codex</span>
+    <span class="keyhint"><span class="kc" data-key="u">U</span>Undo last change</span>
+    <span class="keyhint keyhint-end"><span class="kc kc-wide" data-key="Escape">esc</span>Clear</span>
+  </footer>
+</div>
+
+<dialog class="review" id="review" aria-labelledby="review-title">
+  <form method="dialog" class="review-inner">
+    <h2 id="review-title">Review change</h2>
+    <ol class="ops" id="review-ops"></ol>
+    <ul class="warnings" id="review-warnings"></ul>
+    <p class="review-note">Anything replaced or removed moves to a backup folder. You can undo this from History.</p>
+    <div class="review-actions">
+      <button class="btn btn-quiet" value="cancel" type="submit"><span class="kc kc-wide" data-key="Escape">esc</span>Cancel</button>
+      <button class="btn btn-primary" value="apply" type="submit" id="review-apply"><span class="kc kc-wide kc-on-primary" data-key="Enter">enter</span><span id="review-apply-label">Apply</span></button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
