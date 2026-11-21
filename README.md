@@ -1,4 +1,4 @@
-# Bindery
+# Bindery - ALPHA Build
 
 Bindery builds, shares and installs libraries of skills and prompts for Claude Code and Codex, and gives light advice on which model and workflow to start with.
 
