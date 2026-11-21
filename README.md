@@ -1,4 +1,4 @@
-# Agent Compass
+# Bindery - ALPHA Build
 
 A small Codex plugin for friendly model and workflow suggestions. It makes no model calls and never changes your selected model. Recommendations are rough starting points, not measurements of your allowance.
 
