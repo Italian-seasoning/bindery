@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { loadCatalog, fetchPack, cachedPack } from '../../plugins/agent-compass/manager/lib/catalog.mjs';
+import { loadCatalog, fetchPack, cachedPack } from '../../plugins/bindery/manager/lib/catalog.mjs';
 
 const GIT_ENV = { ...process.env, GIT_TERMINAL_PROMPT: '0' };
 

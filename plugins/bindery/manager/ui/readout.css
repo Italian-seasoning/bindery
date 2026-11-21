@@ -1,0 +1,29 @@
+/* Readout: dot-matrix display panel. Markup and behaviour live in readout.js. */
+
+:root { --readout-bg: #0B0C12; }
+:root[data-theme="light"] { --readout-bg: #14151C; }
+
+/* Panel: the svg itself carries the glass. */
+.readout {
+  display: inline-block;
+  vertical-align: middle;
+  background: var(--readout-bg);
+  border-radius: 6px;
+  padding: 5px 6px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), inset 0 1px 6px rgba(0, 0, 0, .6);
+}
+
+/* Sizes: height only, width follows the viewBox. */
+.readout-sm { height: 18px; }
+.readout-md { height: 28px; }
+.readout-lg { height: 56px; }
+
+/* Tones set the lit colour. Signal stays bright on the dark panel in both themes. */
+.readout-signal { color: var(--signal); }
+:root[data-theme="light"] .readout-signal { color: #8A94FF; }
+.readout-amber { color: var(--amber); }
+.readout-red { color: var(--red); }
+
+/* Lit cells are solid; unlit cells show the grid at low opacity. */
+.ro-on { fill: currentColor; }
+.ro-off { fill: currentColor; opacity: .1; }

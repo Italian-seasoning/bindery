@@ -3,17 +3,17 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { scanAll } from '../../plugins/agent-compass/manager/lib/scan.mjs';
-import { applyPlan, undo } from '../../plugins/agent-compass/manager/lib/changes.mjs';
-import { planShare, shareStatus } from '../../plugins/agent-compass/manager/lib/share.mjs';
-import { main } from '../../plugins/agent-compass/manager/cli.mjs';
+import { scanAll } from '../../plugins/bindery/manager/lib/scan.mjs';
+import { applyPlan, undo } from '../../plugins/bindery/manager/lib/changes.mjs';
+import { planShare, shareStatus } from '../../plugins/bindery/manager/lib/share.mjs';
+import { main } from '../../plugins/bindery/manager/cli.mjs';
 
 const md = name => `---\nname: ${name}\ndescription: ${name} skill\n---\nbody\n`;
 
 function sandbox() {
   const base = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'ac-share-')));
   const home = path.join(base, 'home');
-  const stateDir = path.join(home, '.agent-compass');
+  const stateDir = path.join(home, '.bindery');
   const dirs = {
     claude: path.join(home, '.claude', 'skills'),
     codex: path.join(home, '.codex', 'skills'),
@@ -162,12 +162,12 @@ test('several skills share in one change and undo together', () => {
 test('CLI share prints a plan and changes nothing without --yes', async () => {
   const env = sandbox();
   const prevHome = process.env.HOME;
-  const prevState = process.env.AGENT_COMPASS_HOME;
+  const prevState = process.env.BINDERY_HOME;
   const prevCwd = process.cwd();
   try {
     env.skill(env.dirs.claude, 'demo');
     process.env.HOME = env.home;
-    process.env.AGENT_COMPASS_HOME = env.stateDir;
+    process.env.BINDERY_HOME = env.stateDir;
     process.chdir(env.home);
     const lines = [];
     const code = await main(['share', '--all', '--with', 'codex'], { write: l => lines.push(l) });
@@ -178,7 +178,7 @@ test('CLI share prints a plan and changes nothing without --yes', async () => {
   } finally {
     process.chdir(prevCwd);
     process.env.HOME = prevHome;
-    if (prevState === undefined) delete process.env.AGENT_COMPASS_HOME; else process.env.AGENT_COMPASS_HOME = prevState;
+    if (prevState === undefined) delete process.env.BINDERY_HOME; else process.env.BINDERY_HOME = prevState;
     env.cleanup();
   }
 });

@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'compass-test-'));
-const hook = fileURLToPath(new URL('../plugins/agent-compass/hooks/advisor.mjs', import.meta.url));
+const hook = fileURLToPath(new URL('../plugins/bindery/hooks/advisor.mjs', import.meta.url));
 const call = event => spawnSync(process.execPath, [hook], { input: JSON.stringify(event), encoding: 'utf8', env: { ...process.env, TMPDIR: tmp } });
 try {
   const event = { hook_event_name: 'UserPromptSubmit', session_id: 'one', prompt: 'build a 3d scene', model: 'active' };

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Bindery</title>
+<link rel="icon" href="mark.svg" type="image/svg+xml">
+<link rel="preload" href="departure-mono.woff2" as="font" type="font/woff2" crossorigin>
+<script src="theme.js"></script>
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="menus.css">
+<link rel="stylesheet" href="command-menu.css">
+<link rel="stylesheet" href="readout.css">
+<link rel="stylesheet" href="motion.css">
+</head>
+<body>
+<div class="app" id="app" data-view="installed">
+  <header class="bar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect class="mark-skirt" x="4" y="6" width="56" height="54" rx="13"/><rect class="mark-face" x="10" y="7" width="44" height="40" rx="9"/><rect class="mark-eye" x="20.5" y="20" width="7" height="11" rx="1.2"/><rect class="mark-eye" x="36.5" y="20" width="7" height="11" rx="1.2"/></svg>
+      <span>Bindery</span>
+    </div>
+    <nav class="views" aria-label="Views">
+      <button class="view-tab" type="button" data-view="libraries" aria-keyshortcuts="1">Libraries</button>
+      <button class="view-tab" type="button" data-view="installed" aria-current="page" aria-keyshortcuts="2">Skills <span class="count" id="count-installed"></span></button>
+      <button class="view-tab" type="button" data-view="prompts" aria-keyshortcuts="3">Prompts</button>
+      <button class="view-tab" type="button" data-view="packs" aria-keyshortcuts="4">Packs</button>
+      <button class="view-tab" type="button" data-view="history" aria-keyshortcuts="5">History</button>
+    </nav>
+    <label class="search">
+      <span class="visually-hidden">Search skills</span>
+      <svg class="search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.4 10.4 14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input id="search" type="search" placeholder="Search names and descriptions" autocomplete="off" spellcheck="false" aria-keyshortcuts="/">
+      <span class="glyph" aria-hidden="true">/</span>
+    </label>
+    <div class="bar-tools">
+      <button class="btn btn-quiet tool" type="button" id="open-commands" aria-keyshortcuts="Meta+K" aria-label="Commands">Commands <span class="glyph" aria-hidden="true">⌘K</span></button>
+      <button class="btn btn-quiet tool icon-only" type="button" id="open-settings" aria-keyshortcuts="," aria-label="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M3 8h10M3 11.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="6" cy="4.5" r="1.6" fill="var(--ground)" stroke="currentColor" stroke-width="1.5"/><circle cx="10.5" cy="8" r="1.6" fill="var(--ground)" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="11.5" r="1.6" fill="var(--ground)" stroke="currentColor" stroke-width="1.5"/></svg></button>
+    </div>
+  </header>
+
+  <div class="body">
+    <aside class="rail" id="rail" aria-label="Filters"></aside>
+
+    <main class="list-wrap" id="main">
+      <div class="list-head" id="list-head"></div>
+      <div class="list" id="list" role="listbox" aria-label="Skills" tabindex="0"></div>
+    </main>
+
+    <section class="detail" id="detail" aria-live="polite" aria-label="Details"></section>
+  </div>
+
+  <footer class="keys" aria-label="Keyboard shortcuts">
+    <button class="keyhint" type="button" data-send="ArrowDown"><span class="glyph">↑↓</span>Move</button>
+    <button class="keyhint" type="button" data-send="/"><span class="glyph">/</span>Search</button>
+    <span class="keyhint"><span class="glyph">1–5</span>Views</span>
+    <span class="keyhint" data-for="installed prompts"><span class="glyph">c</span><span class="glyph">x</span>Use in Claude Code or Codex</span>
+    <span class="keyhint" data-for="libraries"><span class="glyph">n</span>New library</span>
+    <button class="keyhint" type="button" data-send="u"><span class="glyph">u</span>Undo last change</button>
+    <button class="keyhint keyhint-end" type="button" data-send="Escape"><span class="glyph">esc</span>Clear</button>
+  </footer>
+</div>
+
+<dialog class="review" id="review" aria-labelledby="review-title">
+  <form method="dialog" class="review-inner">
+    <h2 id="review-title">Review change</h2>
+    <ol class="ops" id="review-ops"></ol>
+    <ul class="warnings" id="review-warnings"></ul>
+    <p class="review-note">Anything replaced or removed moves to a backup folder. You can undo this from History.</p>
+    <div class="review-actions">
+      <button class="btn btn-quiet" value="cancel" type="submit">Cancel <span class="glyph">esc</span></button>
+      <button class="cap cap-primary" value="apply" type="submit" id="review-apply" data-key="Enter"><span id="review-apply-label">Apply</span><span class="glyph">enter</span></button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+/* Motion layer. Loads after app.css, menus.css and command-menu.css and uses their tokens.
+   Enter animations for the review dialog, settings sheet, popover menu, command menu and
+   toast already live in those files, so they are not repeated here. */
+
+/* ---------- Tokens ---------- */
+:root {
+  --dur-1: 120ms; /* hover, press, selected */
+  --dur-2: 180ms; /* indicators, detail swap */
+  --dur-3: 240ms; /* reserved for larger surfaces */
+}
+
+/* ---------- State transitions ----------
+   Named properties only. Each one is short enough that a fast pointer never waits. */
+.btn {
+  transition-property: background-color, box-shadow, color, scale;
+  transition-duration: var(--dur-1);
+  transition-timing-function: var(--ease-out);
+}
+.facet {
+  transition-property: background-color, color, scale;
+  transition-duration: var(--dur-1);
+  transition-timing-function: var(--ease-out);
+}
+.view-tab {
+  transition-property: color, scale;
+  transition-duration: var(--dur-1);
+  transition-timing-function: var(--ease-out);
+}
+/* Rows animate on hover only. Selection also moves with arrow keys, so it stays instant. */
+.row:hover {
+  transition-property: background-color;
+  transition-duration: var(--dur-1);
+  transition-timing-function: var(--ease-out);
+}
+
+/* ---------- Selected bar under the active view ----------
+   app.css draws the bar only on aria-current. It is now always present and grows in or out. */
+.view-tab::after {
+  content: ""; position: absolute; left: 50%; bottom: 9px; width: 0; height: 4px;
+  translate: -50% 0; border-radius: 2px; background: var(--signal); opacity: 0;
+  transition-property: width, opacity;
+  transition-duration: var(--dur-2);
+  transition-timing-function: var(--ease-out);
+}
+.view-tab[aria-current="page"]::after { width: 18px; opacity: 1; margin-left: 0; }
+
+/* ---------- Press feedback ----------
+   scale (not transform) so it does not fight existing transforms on .switch or .cap.
+   .chip already scales in app.css, and .cap keeps its own translateY press. */
+.btn:active:not(:disabled),
+.facet:active,
+.view-tab:active { scale: .96; }
+
+/* ---------- Detail pane swap ----------
+   When a different item opens, app.js marks the new children .enter; they fade up 4px and
+   stagger by 25ms for the first six. Re-renders of the same item stay still. */
+@keyframes detail-in {
+  from { opacity: 0; transform: translateY(4px); }
+}
+@keyframes detail-fade {
+  from { opacity: 0; }
+}
+#detail > .enter:not(.detail-blank) {
+  animation: detail-in var(--dur-2) var(--ease-out) backwards;
+}
+#detail > :nth-child(2) { animation-delay: 25ms; }
+#detail > :nth-child(3) { animation-delay: 50ms; }
+#detail > :nth-child(4) { animation-delay: 75ms; }
+#detail > :nth-child(5) { animation-delay: 100ms; }
+#detail > :nth-child(6) { animation-delay: 125ms; }
+
+/* ---------- Reduced motion ----------
+   No movement and no scale. Presses dim instead, and the detail swap is a plain fade. */
+@media (prefers-reduced-motion: reduce) {
+  .btn:active:not(:disabled),
+  .facet:active,
+  .view-tab:active,
+  .chip:active:not(:disabled) { scale: none; filter: brightness(.9); }
+  .view-tab::after { transition-property: opacity; }
+  #detail > .enter:not(.detail-blank) { animation: detail-fade var(--dur-2) var(--ease-out) backwards; }
+}

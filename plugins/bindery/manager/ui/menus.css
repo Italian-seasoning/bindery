@@ -1,0 +1,77 @@
+/* Popover menu and settings sheet. Loads after app.css and uses its tokens. */
+
+/* ---------- Popover menu ---------- */
+.menu {
+  position: fixed; z-index: 20; min-width: 200px; max-width: 320px; padding: 6px;
+  background: var(--deck-2); border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--hair-strong), 0 18px 48px rgba(0, 0, 0, .45);
+  opacity: 0; transform: scale(.97);
+  transition: opacity 100ms ease-in, transform 100ms var(--ease-out); /* exit */
+}
+.menu[hidden] { display: none; }
+.menu.is-open { opacity: 1; transform: none; transition-duration: 140ms; } /* enter */
+
+.menu-item {
+  position: relative; display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 10px;
+  border-radius: 7px; font-size: 13px; color: var(--text); white-space: nowrap; cursor: default;
+  user-select: none; outline: none;
+}
+.menu-item:focus { background: var(--row-sel); }
+.menu-item.danger { color: var(--red); }
+.menu-item[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+
+/* Every item reserves the check slot so labels line up, checkable or not. */
+.menu-check { position: relative; width: 10px; height: 14px; flex: none; }
+.menu-item[role="menuitemradio"][aria-checked="true"] .menu-check::before {
+  content: ""; position: absolute; left: 0; top: 5px; width: 10px; height: 4px; border-radius: 2px;
+  background: var(--accent, var(--cobalt));
+}
+.menu-item[role="menuitemcheckbox"][aria-checked="true"] .menu-check::before {
+  content: ""; position: absolute; left: 1px; top: 2px; width: 4px; height: 8px;
+  border: solid var(--accent, var(--cobalt)); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.menu-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.menu-item .glyph { margin-left: auto; }
+
+.menu-group { padding: 8px 10px 4px; font-size: 11.5px; color: var(--text-3); user-select: none; }
+.menu-sep { height: 1px; margin: 4px 6px; background: var(--hair); }
+
+@media (prefers-reduced-motion: reduce) {
+  .menu, .menu.is-open { transition: none; }
+  .sheet[open] { animation: none; }
+}
+
+/* ---------- Settings sheet ---------- */
+.sheet {
+  position: fixed; inset: 0 0 0 auto; height: 100vh; height: 100dvh; width: min(420px, 100vw);
+  max-height: none; margin: 0; padding: 24px; border: 0; overflow: auto;
+  background: var(--deck); color: var(--text);
+  box-shadow: -1px 0 0 var(--hair-strong), -30px 0 80px rgba(0, 0, 0, .45);
+}
+.sheet::backdrop { background: rgba(6, 7, 9, .5); }
+.sheet[open] { animation: sheet-in 200ms var(--ease-out); }
+@keyframes sheet-in { from { opacity: 0; transform: translateX(16px); } }
+
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.sheet h2 { margin: 0; font-size: 17px; font-weight: 650; letter-spacing: -.01em; }
+.sheet-sec + .sheet-sec { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--hair); }
+.sheet h3 { margin: 0 0 10px; font-size: 12px; font-weight: 600; color: var(--text-3); }
+.sheet p { margin: 0 0 10px; font-size: 13px; line-height: 1.55; color: var(--text-2); }
+.sheet .about { margin: 0; color: var(--text-3); }
+
+.path-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; }
+.path-row code { min-width: 0; overflow-wrap: anywhere; color: var(--text); }
+
+/* Segmented control: matches .seg in app.css, with aria-checked in place of aria-pressed. */
+.sheet .seg [role="radio"] {
+  height: 26px; padding: 0 12px; border: 0; border-radius: 6px; background: none; cursor: pointer;
+  color: var(--text-2); font: inherit; font-size: 12.5px; font-weight: 550;
+}
+.sheet .seg [role="radio"][aria-checked="true"] {
+  background: var(--deck-2); color: var(--text); box-shadow: inset 0 0 0 1px var(--hair-strong);
+}
+
+/* Shortcuts: two columns, keys on the left as glyphs. */
+.shortcut-list { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 9px 16px; align-items: center; margin: 0; font-size: 13px; }
+.shortcut-list dt { display: flex; gap: 4px; }
+.shortcut-list dd { margin: 0; color: var(--text-2); }

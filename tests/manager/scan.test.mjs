@@ -3,9 +3,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { after, before, describe, test } from 'node:test';
-import { parseFrontmatter, readSkill } from '../../plugins/agent-compass/manager/lib/skill.mjs';
-import { listPluginSkillDirs, listRoots } from '../../plugins/agent-compass/manager/lib/roots.mjs';
-import { scanAll } from '../../plugins/agent-compass/manager/lib/scan.mjs';
+import { parseFrontmatter, readSkill } from '../../plugins/bindery/manager/lib/skill.mjs';
+import { listPluginSkillDirs, listRoots } from '../../plugins/bindery/manager/lib/roots.mjs';
+import { scanAll } from '../../plugins/bindery/manager/lib/scan.mjs';
 
 function write(file, text) {
   fs.mkdirSync(path.dirname(file), { recursive: true });

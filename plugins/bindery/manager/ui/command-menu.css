@@ -1,0 +1,44 @@
+/* ---------- Command menu ----------
+   A fuzzy-search dialog. Flat surfaces, hairlines as inset shadows, the dialog is the focus context.
+   Colours come from the tokens in app.css, so light mode follows with no overrides here. */
+.cmdk {
+  width: min(620px, calc(100vw - 32px)); margin-top: 12vh; padding: 0; border: 0; border-radius: 14px;
+  background: var(--deck); color: var(--text);
+  box-shadow: 0 0 0 1px var(--hair-strong), 0 30px 80px rgba(0, 0, 0, .55);
+}
+.cmdk::backdrop { background: rgba(6, 7, 9, .55); }
+.cmdk[open] { animation: cmdk-in 160ms var(--ease-out); }
+@keyframes cmdk-in { from { opacity: 0; transform: translateY(-6px); } }
+
+.cmdk-input {
+  display: block; width: 100%; height: 52px; margin: 0; padding: 0 18px; border: 0; border-bottom: 1px solid var(--hair);
+  border-radius: 14px 14px 0 0; background: none; color: var(--text); font: inherit; font-size: 15px; outline: none;
+}
+.cmdk-input::placeholder { color: var(--text-3); }
+
+.cmdk-list { max-height: min(420px, 60vh); overflow: auto; padding: 6px; }
+.cmdk-list[hidden] { display: none; }
+.cmdk-group { padding: 10px 10px 4px; font-size: 12px; font-weight: 600; color: var(--text-3); }
+
+.cmdk-option {
+  display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 10px; border-radius: 8px;
+  color: var(--text); cursor: pointer;
+}
+.cmdk-option[aria-selected="true"] { background: var(--row-sel); box-shadow: inset 0 0 0 1px var(--hair-strong); }
+.cmdk-label {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px;
+}
+.cmdk-hint {
+  min-width: 0; margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 12.5px; color: var(--text-3);
+}
+/* The shortcut sits at the far right: after the hint when there is one, otherwise after the label. */
+.cmdk-hint + .glyph { margin-left: 0; }
+.cmdk-label + .glyph { margin-left: auto; }
+
+.cmdk-empty { margin: 0; padding: 22px 16px 26px; text-align: center; font-size: 13px; color: var(--text-3); }
+.cmdk-empty[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cmdk[open] { animation: none; }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "bindery",
+  "version": "0.2.0",
+  "description": "Build, share and install libraries of skills and prompts for Claude Code and Codex, with light model and workflow guidance.",
+  "author": {
+    "name": "Italian-seasoning"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Bindery",
+        "shortDescription": "Skill and prompt libraries you can share",
+        "longDescription": "Collect the skills and prompts that work for you into libraries, share them as a folder or git repo, and install other people's with a safety check, a preview and undo.",
+        "developerName": "Italian-seasoning",
+        "category": "Productivity",
+        "capabilities": [
+          "Instructions",
+          "Lifecycle hooks"
+        ]
+      }
+    }
+  },
+  "license": "MIT"
+}

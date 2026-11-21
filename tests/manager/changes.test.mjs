@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {
   planInstall, planInstallMany, planRemove, applyPlan, undo, history,
-} from '../../plugins/agent-compass/manager/lib/changes.mjs';
+} from '../../plugins/bindery/manager/lib/changes.mjs';
 
 const SKILL_MD = '---\nname: demo\ndescription: Demo skill\n---\nbody\n';
 

@@ -6,14 +6,14 @@ import path from 'node:path';
 import http from 'node:http';
 import { execFile, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { startServer, canonicalPackSkills, tildify } from '../../plugins/agent-compass/manager/server.mjs';
-import { scanAll } from '../../plugins/agent-compass/manager/lib/scan.mjs';
-import { planInstall, applyPlan } from '../../plugins/agent-compass/manager/lib/changes.mjs';
+import { startServer, canonicalPackSkills, tildify } from '../../plugins/bindery/manager/server.mjs';
+import { scanAll } from '../../plugins/bindery/manager/lib/scan.mjs';
+import { planInstall, applyPlan } from '../../plugins/bindery/manager/lib/changes.mjs';
 
-const MANAGER = fileURLToPath(new URL('../../plugins/agent-compass/manager/', import.meta.url));
+const MANAGER = fileURLToPath(new URL('../../plugins/bindery/manager/', import.meta.url));
 const CLI = path.join(MANAGER, 'cli.mjs');
 const UI_INDEX = path.join(MANAGER, 'ui', 'index.html');
-const TOKEN_HEADER = 'x-compass-token';
+const TOKEN_HEADER = 'x-bindery-token';
 const DEMO_MD = '---\nname: demo\ndescription: Demo skill for the server tests\n---\nDemo body\n';
 
 let base;
@@ -268,11 +268,11 @@ test('tildify replaces only whole home-path segments', () => {
   assert.equal(out.c[0], '~');
 });
 
-test('CLI list --json works with HOME and AGENT_COMPASS_HOME set to temp dirs', async () => {
+test('CLI list --json works with HOME and BINDERY_HOME set to temp dirs', async () => {
   const { stdout } = await new Promise((resolve, reject) => {
     execFile(process.execPath, [CLI, 'list', '--json'], {
       cwd: base,
-      env: { ...process.env, HOME: home, AGENT_COMPASS_HOME: stateDir },
+      env: { ...process.env, HOME: home, BINDERY_HOME: stateDir },
     }, (err, out, errOut) => (err ? reject(Object.assign(err, { stderr: errOut })) : resolve({ stdout: out })));
   });
   const data = JSON.parse(stdout);
@@ -284,10 +284,30 @@ test('CLI list --json works with HOME and AGENT_COMPASS_HOME set to temp dirs', 
 
 test('CLI with an unknown command exits 2 with one error line', async () => {
   const result = await new Promise(resolve => {
-    execFile(process.execPath, [CLI, 'nonsense'], { env: { ...process.env, HOME: home, AGENT_COMPASS_HOME: stateDir } }, (err, out, errOut) => {
+    execFile(process.execPath, [CLI, 'nonsense'], { env: { ...process.env, HOME: home, BINDERY_HOME: stateDir } }, (err, out, errOut) => {
       resolve({ code: err ? err.code : 0, errOut });
     });
   });
   assert.equal(result.code, 2);
   assert.match(result.errOut.split('\n')[0], /Unknown command "nonsense"/);
+});
+
+test('want list round-trips through the API and stays in the state folder', async () => {
+  const added = await api('/api/want/add', { method: 'POST', body: { url: 'https://github.com/acme/tools', note: 'later' } });
+  assert.equal(added.status, 200);
+  const { item } = json(added);
+  assert.equal(item.title, 'acme/tools');
+  assert.ok(fs.existsSync(path.join(stateDir, 'want.json')));
+  const bad = await api('/api/want/add', { method: 'POST', body: { url: 'file:///etc/passwd' } });
+  assert.equal(bad.status, 400);
+  assert.match(json(bad).error, /Only web links/);
+  const updated = await api('/api/want/update', { method: 'POST', body: { id: item.id, status: 'reviewed' } });
+  assert.equal(json(updated).item.status, 'reviewed');
+  const listed = json(await api('/api/want'));
+  assert.deepEqual(listed.items.map(i => i.id), [item.id]);
+  assert.match(json(await api('/api/want/export')).markdown, /\[acme\/tools\]/);
+  const removed = await api('/api/want/remove', { method: 'POST', body: { id: item.id } });
+  assert.deepEqual(json(removed).items, []);
+  const missing = await api('/api/want/remove', { method: 'POST', body: { id: item.id } });
+  assert.equal(missing.status, 400);
 });
