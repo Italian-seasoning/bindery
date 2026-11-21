@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import Readout from '../components/Readout.astro';
+import { site } from '../data/site';
+
+const lines: [string, string?][] = [
+  ['{'],
+  ['  "format": "agent-library/1",', 'Version of this format, so older Bindery copies can say what they can read.'],
+  ['  "id": "ui-kit",', 'Lowercase letters, digits and dashes. It names the folder.'],
+  ['  "name": "UI kit",'],
+  ['  "author": "Sam",', 'A display name, or empty.'],
+  ['  "description": "Layout critique and release hygiene.",'],
+  ['  "version": "1.0.0",'],
+  ['  "license": "MIT",', 'Shown in every import preview. Missing licences are pointed out.'],
+  ['  "items": ['],
+  ['    {'],
+  ['      "type": "skill",', 'A skill is a folder with SKILL.md. A prompt is one .md file.'],
+  ['      "name": "pr-review",'],
+  ['      "path": "skills/pr-review",', 'Always inside the library. No "..", no absolute paths.'],
+  ['      "bestFor": "A careful review of the current diff.",', 'One line a person reads before deciding.'],
+  ['      "apps": ["claude", "codex"],', 'Which apps it is copied into on import.'],
+  ['      "source": { "repo": "https://github.com/…", "commit": "abc1234" }', 'Where it came from. Provenance only: the copy in the folder is what installs.'],
+  ['    }'],
+  ['  ]'],
+  ['}'],
+];
+const rules: [string, string][] = [
+  ['Self-contained', 'A zip of the folder, or a git repository of it, is the whole library. Nothing is fetched at install time.'],
+  ['Unknown keys', 'Kept on read and written back unchanged, so a newer format never loses data in an older Bindery.'],
+  ['Safety scan', 'Every file is read before import. High findings, like a download piped into a shell, start unticked. Nothing runs during the scan.'],
+  ['Install', 'Each item is copied into the apps it lists, through a plan you review. History keeps an undo for every change.'],
+  ['Update', 'A library imported from a link can be fetched again. You see what was added, changed and removed before anything installs.'],
+];
+---
+<Base title="Library format" description="A Bindery library is a plain folder with library.json, skill folders and prompt files. Here is every field, and the rules imports follow.">
+  <header class="page-head">
+    <div class="page-head__copy">
+      <h1 data-split="lines" data-intro>A library is a folder you can read.</h1>
+      <p>No database and no account. A library.json says what is inside and who it is for; the skills and prompts sit next to it as ordinary files.</p>
+    </div>
+    <div class="page-head__face">
+      <Readout face="idle" text="SPEC" glyphs={4} label="" data-agent="idle" data-gaze />
+    </div>
+  </header>
+
+  <div class="spec">
+    <section class="spec__tree" aria-labelledby="tree-title">
+      <h2 id="tree-title">The folder</h2>
+      <pre><code>ui-kit/
+  library.json
+  README.md
+  skills/
+    pr-review/SKILL.md
+    polish/SKILL.md
+  prompts/
+    review.md</code></pre>
+      <p>README.md is written by Bindery for whoever opens the folder, so a library still makes sense to someone who has never heard of it.</p>
+    </section>
+
+    <section class="spec__json" aria-labelledby="json-title">
+      <h2 id="json-title">library.json, field by field</h2>
+      <div class="json" tabindex="0" role="region" aria-label="An example library.json with notes">
+        <ol>
+          {lines.map(([code, note]) => <li style={`--i:${code.length - code.trimStart().length}`}><b>{code.trimStart()}</b>{note ? <em>{note}</em> : null}</li>)}
+        </ol>
+      </div>
+    </section>
+
+    <section class="spec__rules" aria-labelledby="rules-title">
+      <h2 id="rules-title">What Bindery promises about it</h2>
+      <dl>
+        {rules.map(([t, d]) => <><dt>{t}</dt><dd>{d}</dd></>)}
+      </dl>
+      <p class="spec__more">The full spec lives in the repository: <a class="prose-link" href={`${site.repo}#libraries`}>README, Libraries section</a>.</p>
+    </section>
+  </div>
+
+  <Footer slot="footer" />
+</Base>

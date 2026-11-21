@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import Readout from '../components/Readout.astro';
+import Stage from '../components/Stage.astro';
+import Footer from '../components/Footer.astro';
+import { site, chapters } from '../data/site';
+
+---
+<Base title="The story" description="How one agent's skills got scattered across three folders, and how a library brought them back.">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__copy">
+      <h1 id="hero-title" class="hero__title" data-split="lines" data-intro>I had the skills. I just couldn’t find them.</h1>
+      <p class="hero__lede">Bindery is a free, local manager for the skills and prompts that Claude Code and Codex read. This is the story of one agent, told on its own readout.</p>
+      <div class="hero__actions">
+        <a class="key" href={site.repo}><span class="key__cap"><span class="key__label">Get Bindery</span></span></a>
+        <a class="sweep sweep--quiet" href="#story"><span>Start reading</span></a>
+      </div>
+      <p class="hero__note">Free, MIT, runs on your machine. Clone the repo, then run <code>node plugins/bindery/manager/cli.mjs</code>.</p>
+    </div>
+    <figure class="hero__agent">
+      <div class="hero__board">
+        <Readout face="sleep" label="The agent's face on a dot-matrix display" class="hero__face" data-agent="sleep" data-gaze data-hero-agent />
+        <div class="hero__line-wrap">
+          <Readout face={null} text="3 FOLDERS" glyphs={9} label="" class="hero__line" data-agent="idle" data-hero-line />
+        </div>
+      </div>
+      <figcaption>The agent. It reads your skills folders so you don’t have to remember which app has what.</figcaption>
+    </figure>
+  </section>
+
+  <section class="story" id="story" aria-labelledby="story-title">
+    <h2 id="story-title" class="sr-only">The story</h2>
+    <div class="story__chapters">
+      {chapters.map((c, i) => (
+        <article class="chapter" data-tone={c.tone} data-chapter={JSON.stringify({ readout: c.readout, face: c.face, tone: c.tone, title: c.title })} aria-labelledby={`ch-${c.id}`}>
+          <p class="chapter__readout" aria-hidden="true">{c.readout}</p>
+          <h3 id={`ch-${c.id}`} class="chapter__title">{c.title}</h3>
+          <p class="chapter__body">{c.body}</p>
+        </article>
+      ))}
+    </div>
+    <div class="story__stage">
+      <Stage />
+    </div>
+  </section>
+
+  <section class="invite" aria-labelledby="end-title">
+    <Readout face="happy" label="" class="invite__face" data-agent="happy" data-gaze />
+    <div class="invite__copy">
+      <h2 id="end-title" class="invite__title">That’s the whole story.</h2>
+      <p class="invite__lede">Bindery is free, local and MIT licensed. The home page shows what each part does, with the command for it.</p>
+      <div class="hero__actions">
+        <a class="key" href={site.repo}><span class="key__cap"><span class="key__label">Get Bindery</span></span></a>
+        <a class="sweep sweep--quiet" href="/"><span>Back home</span></a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</Base>

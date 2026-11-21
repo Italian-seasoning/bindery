@@ -1,0 +1,46 @@
+---
+// What it does: five rows, each a real command. A row's command types itself when the row becomes current;
+// src/motion/home.ts loops the pictogram at the same time. The full text is in the markup.
+import '../../styles/home-sections.css';
+import { restCells } from '../../motion/home';
+
+const verbs = [
+  { id: 'find', pict: 'find', word: 'Find', say: 'See every skill Claude Code and Codex can read, in one list.', cmd: 'bindery list' },
+  { id: 'resolve', pict: 'resolve', word: 'Resolve', say: 'Two copies disagree? Keep the one you trust. The other app links to it.', cmd: 'bindery resolve pr-review --keep claude' },
+  { id: 'share', pict: 'share', word: 'Share', say: 'Export a library as a plain folder you can zip or push to a repo.', cmd: 'bindery library export ui-kit ~/Desktop/ui-kit' },
+  { id: 'import', pict: 'bind', word: 'Import', say: "Bring in a friend's library. Every file is scanned first, and only what you tick installs.", cmd: 'bindery library import owner/ui-kit' },
+  { id: 'undo', pict: 'undo', word: 'Undo', say: 'Every change is journaled. One command puts it all back.', cmd: 'bindery undo <id>' },
+].map((v) => ({
+  ...v,
+  len: v.cmd.length,
+  parts: v.cmd.split(' ').map((t, i) => ({ t, cls: i === 0 ? 'verb__cmd-tok' : t.startsWith('--') ? 'verb__flag' : undefined })),
+}));
+const CLS = ['', 'on', 'amber', 'ghost'];
+---
+<section class="verbs" aria-labelledby="verbs-title" data-verbs>
+  <div class="verbs__rail" aria-hidden="true"><span class="verbs__signal" data-verbs-signal></span></div>
+  <h2 id="verbs-title" class="home-h2">What it does</h2>
+  <p class="verbs__intro">
+    In the window or on the command line. Here <code>bindery</code> is short for <code>node plugins/bindery/manager/cli.mjs</code> in a clone of the repo.
+  </p>
+  <ul class="verbs__list">
+    {verbs.map((v) => (
+      <li class="verb" data-verb={v.id}>
+        <div class="verb__copy">
+          <h3 class="verb__word">{v.word}</h3>
+          <p class="verb__say">{v.say}</p>
+          <p class="verb__line" data-typed data-len={v.len} style={`--len:${v.len}`}>
+            <span class="verb__prompt" aria-hidden="true">$ </span><span class="verb__text">{v.parts.map((p, i) => <>{i ? ' ' : ''}<span class={p.cls}>{p.t}</span></>)}</span><span class="verb__caret" aria-hidden="true"></span>
+          </p>
+        </div>
+        <div class="verb__pict">
+          <svg class="pict" data-pict={v.pict} viewBox="0 0 294 174" aria-hidden="true" focusable="false">
+            {restCells(v.pict).map((c) => (
+              <rect x={c.x * 20} y={c.y * 20} width="14" height="14" rx="3" class={CLS[c.v] || undefined} />
+            ))}
+          </svg>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>

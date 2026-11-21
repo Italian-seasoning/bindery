@@ -1,0 +1,129 @@
+/* Stage sync: the "lit" treatment that ties the readout word to the UI items it talks about.
+   One device for every state: a 3px bar (::before) and a tint (::after), each wiped in with steps().
+   Each state sets its end state (inset(0)) on every browser; motion is added only under
+   no-preference, so reduced motion shows the same end states with no animation.
+   Prefixed .stage so these beat the base rules in site.css without editing them. */
+
+@keyframes lit-x { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes lit-y { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* Base: hidden until a state lights the item. */
+.stage .lit { position: relative; isolation: isolate; --lit-c: var(--c-signal); }
+.stage .lit::before,
+.stage .lit::after { content: ''; position: absolute; pointer-events: none; }
+.stage .lit::before {
+  left: 0; top: 0; bottom: 0; width: 3px; background: var(--lit-c);
+  clip-path: inset(0 0 100% 0);
+}
+.stage .lit::after {
+  inset: 0; z-index: -1; background: color-mix(in srgb, var(--lit-c) 12%, transparent);
+  clip-path: inset(0 100% 0 0);
+}
+.stage .dir.lit::before { display: none; }
+.stage .dir.lit::after { border-radius: inherit; box-shadow: inset 0 0 0 1px var(--lit-c); }
+.stage .diff__line.lit::before { left: -12px; }
+
+/* 1 LOOKING: the three folders are scanned in turn, then the picks are marked. */
+.stage[data-state='1'] .dir.lit::after { clip-path: inset(0 0 0 0); }
+.stage[data-state='1'] .row--pick.lit::before { clip-path: inset(0 0 0 0); }
+.stage[data-state='1'] .row--pick.lit .row__name { color: var(--c-signal); }
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-state='1'] .dir.lit::after { animation: lit-x 0.28s steps(4, end) calc(var(--i, 0) * 0.16s) both; }
+  .stage[data-state='1'] .row--pick.lit::before { animation: lit-y 0.18s steps(3, end) 0.58s both; }
+}
+
+/* 2 2 COPIES: both pr-review rows in amber, and the two diff lines marked amber. */
+.stage[data-state='2'] .row--pr.lit { --lit-c: var(--c-amber); }
+.stage[data-state='2'] .row--pr.lit::before,
+.stage[data-state='2'] .row--pr.lit::after,
+.stage[data-state='2'] .diff__line.lit::before,
+.stage[data-state='2'] .diff__line.lit::after { clip-path: inset(0 0 0 0); }
+.stage[data-state='2'] .diff__line.lit { --lit-c: var(--c-amber); }
+.stage[data-state='2'] .diff__line.lit span { color: var(--c-amber); }
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-state='2'] .row--pr.lit::before { animation: lit-y 0.18s steps(3, end) 0s both; }
+  .stage[data-state='2'] .row--pr.lit::after { animation: lit-x 0.3s steps(4, end) 0s both; }
+  .stage[data-state='2'] .diff__line.lit::before { animation: lit-y 0.18s steps(3, end) calc(0.3s + var(--i, 0) * 0.14s) both; }
+  .stage[data-state='2'] .diff__line.lit::after { animation: lit-x 0.3s steps(4, end) calc(0.3s + var(--i, 0) * 0.14s) both; }
+}
+
+/* 3 LINKED: the kept row is signal, a stepped connector runs across the gap to the Codex link. */
+.stage[data-state='3'] .row--kept.lit::before,
+.stage[data-state='3'] .row--linked.lit::before,
+.stage[data-state='3'] .row--linked.lit::after { clip-path: inset(0 0 0 0); }
+.stage[data-state='3'] .row--kept.lit::after {
+  inset: auto; left: 100%; top: 50%; width: 40px; height: 2px; margin-top: -1px; z-index: 1;
+  background: var(--c-signal); clip-path: inset(0 0 0 0);
+}
+@media (max-width: 899px) { .stage[data-state='3'] .row--kept.lit::after { width: 22px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-state='3'] .row--kept.lit::before { animation: lit-y 0.18s steps(3, end) 0s both; }
+  .stage[data-state='3'] .row--kept.lit::after { animation: lit-x 0.25s steps(3, end) 0.2s both; }
+  .stage[data-state='3'] .row--linked.lit::before { animation: lit-y 0.18s steps(3, end) 0.45s both; }
+  .stage[data-state='3'] .row--linked.lit::after { animation: lit-x 0.3s steps(4, end) 0.45s both; }
+}
+
+/* 4 4 ITEMS: the four skills/ rows light one by one. */
+.stage[data-state='4'] .tree li.lit::before,
+.stage[data-state='4'] .tree li.lit::after { clip-path: inset(0 0 0 0); }
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-state='4'] .tree li.lit::before { animation: lit-y 0.18s steps(3, end) calc(0.08s + var(--i, 0) * 0.14s) both; }
+  .stage[data-state='4'] .tree li.lit::after { animation: lit-x 0.25s steps(4, end) calc(0.08s + var(--i, 0) * 0.14s) both; }
+}
+
+/* 5 SHARED: the two share commands and the github.com/owner/ui-kit line are lit. */
+.stage[data-state='5'] .share__line.lit::before,
+.stage[data-state='5'] .share__line.lit::after,
+.stage[data-state='5'] .share__to.lit::before,
+.stage[data-state='5'] .share__to.lit::after { clip-path: inset(0 0 0 0); }
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-state='5'] .share__line.lit::before,
+  .stage[data-state='5'] .share__to.lit::before { animation: lit-y 0.18s steps(3, end) calc(var(--i, 0) * 0.16s) both; }
+  .stage[data-state='5'] .share__line.lit::after,
+  .stage[data-state='5'] .share__to.lit::after { animation: lit-x 0.3s steps(4, end) calc(var(--i, 0) * 0.16s) both; }
+}
+
+/* 6 1 HIGH: the risky pick is lit red; the three clean picks dim. */
+.stage[data-state='6'] .pick--on { opacity: 0.4; animation: none; background-image: none; }
+.stage[data-state='6'] .pick--risk { animation: none; background-image: none; }
+.stage[data-state='6'] .pick--risk.lit { --lit-c: var(--c-red); }
+.stage[data-state='6'] .pick--risk.lit::before,
+.stage[data-state='6'] .pick--risk.lit::after { clip-path: inset(0 0 0 0); }
+.stage[data-state='6'] .pick--risk.lit span { color: var(--c-red); }
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-state='6'] .pick--risk.lit::before { animation: lit-y 0.18s steps(3, end) 0.25s both; }
+  .stage[data-state='6'] .pick--risk.lit::after { animation: lit-x 0.35s steps(5, end) 0.25s both; }
+}
+
+/* 7 DONE: the installed tags light up in signal. */
+.stage[data-state='7'] .pick--on .tag--done {
+  display: inline-block; background: var(--c-signal); color: var(--c-bg); clip-path: inset(0 0 0 0);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .stage[data-state='7'] .pick--on .tag--done { animation: lit-x 0.35s steps(4, end) calc(0.1s + var(--i, 0) * 0.14s) both; }
+}
+
+/* Phone: the stage's body is a fixed window and nothing paints outside it.
+   Compact rows, hide the tree notes and risk text, and show the share card instead of the tree in state 5. */
+@media (max-width: 899px) {
+  .stage .stage__body { height: 34svh; overflow: hidden; grid-template-rows: minmax(0, 1fr); }
+  .stage .dir { padding: 8px; }
+  .stage .dir ul { margin-top: 6px; gap: 4px; }
+  .stage .dir__app { font-size: 0.78rem; }
+  .stage .layer--diff .diff { padding: 10px 12px; }
+  .stage .tree li.lit, .stage .share__line.lit, .stage .share__to.lit { padding-left: 10px; }
+  .stage .row { padding: 5px 6px; font-size: 0.66rem; }
+  .stage .lib { padding: 10px 12px; }
+  .stage .tree li { padding: 5px 0; font-size: 0.66rem; }
+  .stage .tree em { display: none; }
+  .stage .share { padding: 10px 12px; font-size: 0.66rem; }
+  .stage[data-state='5'] .lib { display: none; }
+  .stage .diff { padding: 10px 12px; gap: 6px; }
+  .stage .diff__title { font-size: 0.62rem; }
+  .stage .diff__line { font-size: 0.74rem; }
+  .stage .friend { padding: 10px 12px; }
+  .stage .friend ul { margin-top: 8px; }
+  .stage .pick { padding: 5px 4px; }
+  .stage .pick small { display: none; }
+  .stage .friend__foot { margin-top: 8px; }
+}

@@ -1,0 +1,51 @@
+@font-face { font-family: 'General Sans'; src: url('/fonts/general-sans-400-normal.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'General Sans'; src: url('/fonts/general-sans-500-normal.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'General Sans'; src: url('/fonts/general-sans-600-normal.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Departure Mono'; src: url('/fonts/departure-mono.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+
+:root {
+  /* Colour by role. From the product's own theme (docs/THEME.md). */
+  --c-bg: #101116;        /* graphite ground */
+  --c-panel: #0B0C12;     /* readout glass */
+  --c-raised: #17181E;    /* panels on the ground */
+  --c-fg: #ECEAE3;        /* ink */
+  --c-muted: #A9ABB3;     /* secondary text, AA on ground */
+  --c-faint: #7C7F88;     /* only for large or non-essential text */
+  --c-line: rgb(236 234 227 / 0.12);
+  --c-accent: #3443F5;    /* cobalt: the one accent */
+  --c-accent-deep: #1E28B8;
+  --c-signal: #8A94FF;    /* lit readout cells */
+  --c-amber: #F2B63D;
+  --c-red: #FF6B5E;
+  --c-curtain: var(--c-panel);
+
+  --f-display: 'General Sans', ui-sans-serif, system-ui, sans-serif;
+  --f-body: 'General Sans', ui-sans-serif, system-ui, sans-serif;
+  --f-mono: 'Departure Mono', ui-monospace, monospace;
+
+  /* Fluid type (375 → 1440) */
+  --t-mega: clamp(3.1rem, 1rem + 8.6vw, 9.5rem);
+  --t-xl: clamp(2.4rem, 1.3rem + 4.2vw, 5.5rem);
+  --t-l: clamp(1.7rem, 1.2rem + 2vw, 3.1rem);
+  --t-m: clamp(1.2rem, 1.05rem + 0.6vw, 1.6rem);
+  --t-body: clamp(1.0625rem, 1rem + 0.2vw, 1.1875rem);
+  --t-s: 0.9375rem;
+  --t-xs: 0.8125rem;
+
+  --u: clamp(0.5rem, 0.35rem + 0.6vw, 1rem);
+  --gutter: clamp(1rem, 0.5rem + 2.2vw, 2.5rem);
+  --max: 1440px;
+
+  --radius: 14px;
+  --radius-s: 8px;
+
+  --step-ease: steps(8, end);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --z-gl: 0;
+  --z-content: 1;
+  --z-header: 50;
+  --z-cursor: 80;
+  --z-curtain: 90;
+  --z-loader: 100;
+}

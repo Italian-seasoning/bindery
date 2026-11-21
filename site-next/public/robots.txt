@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bindery.dev/sitemap-index.xml

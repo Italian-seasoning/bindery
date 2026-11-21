@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Readout from '../components/Readout.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base title="Not found" description="This page is not in any library.">
+  <section class="lost" aria-labelledby="lost-title">
+    <div class="lost__face">
+      <Readout face="look-left" text="404" glyphs={3} tone="amber" label="The agent looking around: 404" data-agent="look" />
+    </div>
+    <div class="lost__copy">
+      <h1 id="lost-title">This page isn’t in any library.</h1>
+      <p class="lost__path">ls: no such file or directory</p>
+      <div class="hero__actions">
+        <a class="key" href="/"><span class="key__cap"><span class="key__label">Back home</span></span></a>
+        <a class="sweep sweep--quiet" href="/format/"><span>Library format</span></a>
+      </div>
+    </div>
+  </section>
+  <Footer slot="footer" />
+</Base>

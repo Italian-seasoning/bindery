@@ -1,0 +1,178 @@
+/* Home sections: the ticker and the verbs list. Tokens only.
+   One rhythm for every home section: --home-sec above each section, and one heading style. */
+:root { --home-sec: 120px; }
+@media (max-width: 899px) { :root { --home-sec: 72px; } }
+
+.home-h2 {
+  font-family: var(--f-display);
+  font-size: var(--t-l);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--c-fg);
+}
+
+/* ---------- Ticker: a full-bleed LED sign ---------- */
+.ticker {
+  --cell: 9px;
+  position: relative;
+  width: 100vw;
+  margin: var(--home-sec) 0 0 calc(50% - 50vw);
+  height: calc(14 * var(--cell) + 14px); /* two rows of seven cells and a 14 px gap */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  background: var(--c-panel);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+.ticker__row {
+  position: relative;
+  height: calc(7 * var(--cell));
+  overflow: hidden;
+  /* The unlit matrix: a faint dot in every cell. */
+  background-image: radial-gradient(circle closest-side, color-mix(in srgb, var(--c-signal) 18%, transparent) 0 30%, transparent 36%);
+  background-size: var(--cell) var(--cell);
+}
+.ticker__track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  max-width: none; /* the global svg reset would clamp the track to the viewport */
+  width: calc(var(--w) * var(--cell));
+  height: calc(7 * var(--cell));
+  fill: var(--c-signal);
+  transform: translate3d(calc(var(--x, 0) * var(--cell)), 0, 0);
+  will-change: transform;
+}
+@media (max-width: 899px) { .ticker { --cell: 7px; } }
+@media (max-width: 599px) { .ticker { --cell: 5.5px; } } /* 14 x 5.5 + 14 = 91 px: the phone sign */
+
+/* ---------- Verbs ---------- */
+.verbs {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: var(--home-sec) var(--gutter) 0;
+}
+.verbs__rail {
+  position: absolute;
+  left: calc(var(--gutter) / 2);
+  top: var(--home-sec);
+  bottom: 0;
+  width: 2px;
+  background: var(--c-line);
+}
+.verbs__signal {
+  position: absolute;
+  inset: 0;
+  background: var(--c-signal);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+.verbs__intro {
+  margin-top: 16px;
+  max-width: 60ch;
+  color: var(--c-muted);
+  font-size: var(--t-body);
+  line-height: 1.6;
+}
+.verbs__intro code { font-family: var(--f-mono); font-size: 0.9em; color: var(--c-fg); }
+.verbs__list { list-style: none; margin: clamp(32px, 5svh, 56px) 0 0; padding: 0; }
+/* The only hairlines in the section: one between rows. */
+.verb {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: center;
+  gap: clamp(24px, 3vw, 56px);
+  min-height: 28vh;
+  padding-block: 28px;
+  border-top: 1px solid var(--c-line);
+}
+.verb__copy { min-width: 0; }
+.verb__word {
+  font-family: var(--f-display);
+  font-size: var(--t-xl);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--c-muted);
+  /* Secondary action: a current row's word steps 8 px right. Colour is a fast 2-step. */
+  transition: color 0.12s steps(2, end), transform 0.24s steps(2, end);
+}
+.verb.is-current .verb__word { transform: translateX(8px); }
+.verb__say {
+  margin-top: 14px;
+  max-width: 32ch;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--c-muted);
+  transition: color 0.12s steps(2, end);
+}
+/* The command: Departure Mono, with a muted "$ " prompt. Typing clips the text; the caret sits after the prompt. */
+.verb__line {
+  position: relative;
+  margin-top: 18px;
+  font-family: var(--f-mono);
+  font-size: clamp(0.7rem, 0.6rem + 0.6vw, 1.05rem);
+  line-height: 1.5;
+  white-space: pre;
+  color: var(--c-fg);
+  transition: opacity 0.12s steps(2, end);
+}
+.verb__prompt { color: var(--c-muted); }
+.verb__text {
+  display: inline-block;
+  clip-path: inset(0 calc((var(--len) - var(--n, var(--len))) * 1ch) 0 0);
+}
+.verb__cmd-tok { color: var(--c-signal); }
+.verb__flag { color: var(--c-amber); }
+.verb__caret {
+  position: absolute;
+  top: 0.2em;
+  left: calc((2 + var(--n, 0)) * 1ch);
+  width: 0.6em;
+  height: 1.15em;
+  background: var(--c-signal);
+  display: none;
+  animation: verb-blink 1s steps(2, end) infinite;
+}
+.verb__line.is-typing .verb__caret { display: block; }
+@keyframes verb-blink { to { visibility: hidden; } }
+/* Non-current rows keep the full command, dimmed. */
+.verb:not(.is-lit) .verb__line { opacity: 0.55; }
+.verb.is-lit .verb__word,
+.verb.is-lit .verb__say { color: var(--c-fg); }
+
+/* The pictogram panel: a readout-style dot grid, 14 px cells on a 20 px pitch. */
+.verb__pict {
+  width: 320px;
+  max-width: 100%;
+  padding: 14px;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  background: var(--c-panel);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+}
+.pict { display: block; width: 100%; height: auto; color: var(--c-signal); overflow: visible; }
+.pict rect { fill: currentColor; opacity: 0.11; transition: opacity 0.12s steps(2, end); }
+.pict rect.on { opacity: 1; }
+.pict rect.amber { color: var(--c-amber); opacity: 1; }
+.pict rect.ghost { opacity: 0.35; }
+/* Unlit: the rest picture stays visible, dimmed, and does not move. */
+.pict:not(.is-lit) rect.on { opacity: 0.35; }
+.pict:not(.is-lit) rect.amber { opacity: 0.35; }
+
+@media (max-width: 899px) {
+  .verb { grid-template-columns: minmax(0, 1fr); gap: 20px; min-height: 0; padding-block: 28px; }
+  .verb__say { max-width: none; }
+  .verb__line { font-size: 0.68rem; }
+  .verb__pict { width: 100%; height: 148px; }
+  .pict { height: 120px; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .verb__caret { animation: none; }
+}

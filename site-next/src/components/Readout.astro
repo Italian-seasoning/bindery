@@ -1,0 +1,41 @@
+---
+// A dot-matrix readout rendered on the server, so it exists without JavaScript.
+// The client repaints it column by column (src/motion/readout.ts) through the data-* hooks.
+import { lineGrid } from '../lib/matrix';
+
+interface Props {
+  face?: string | null;      // a mood from FACES, or omit for a text-only readout
+  text?: string;
+  glyphs?: number;           // fixed text width in glyphs (0 = no text area)
+  tone?: 'signal' | 'amber' | 'red';
+  label: string;             // what a screen reader hears
+  class?: string;
+  id?: string;
+  live?: boolean;            // announce changes politely
+  [key: `data-${string}`]: string | boolean | undefined;
+}
+const { face, text = '', glyphs = 0, tone = 'signal', label, class: cls = '', id, live = false, ...rest } = Astro.props;
+const grid = lineGrid({ face: face === undefined ? undefined : face, text, glyphs });
+const w = grid[0].length;
+const P = 4;
+---
+<svg
+  class={`readout readout--${tone} ${cls}`}
+  id={id}
+  viewBox={`-2 -2 ${w * P + 3} ${7 * P + 3}`}
+  role={label ? 'img' : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : 'true'}
+  aria-live={live ? 'polite' : undefined}
+  data-readout
+  data-glyphs={glyphs}
+  data-face={face === undefined ? undefined : 'true'}
+  data-tone={tone}
+  data-text={text || undefined}
+  data-cols={w}
+  {...rest}
+>
+  {grid.map((row, y) => row.map((on, x) => (
+    <rect x={x * P} y={y * P} width="3" height="3" rx="0.5" class={on ? 'on' : undefined} data-x={x} />
+  )))}
+</svg>

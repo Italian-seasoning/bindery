@@ -1,0 +1,99 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { site, nav } from '../data/site';
+import Readout from '../components/Readout.astro';
+import '../styles/tokens.css';
+import '../styles/engine.css';
+import '../styles/site.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const { title, description = site.description, image = '/og.png' } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name}: ${site.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const ogImage = new URL(image, Astro.site ?? site.url).href;
+// Compare paths without trailing slash, so /story and /story/ both match the nav entry.
+const norm = (p: string) => (p.length > 1 ? p.replace(/\/+$/, '') : p);
+const path = norm(Astro.url.pathname);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: site.name,
+  description: site.description,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS, Linux, Windows (Node.js)',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  license: 'https://opensource.org/licenses/MIT',
+  url: site.url,
+  codeRepository: site.repo,
+};
+---
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#101116" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="preload" href="/fonts/general-sans-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/general-sans-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+    </script>
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="curtain" transition:persist="curtain" aria-hidden="true"><div class="curtain__panel"></div></div>
+
+    <header class="bar">
+      <a class="bar__brand" href="/" aria-label="Bindery, home">
+        <svg class="bar__mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="6" width="56" height="54" rx="13" fill="#1E28B8"/><rect x="10" y="7" width="44" height="40" rx="9" fill="#3443F5"/><g class="bar__eyes"><rect class="eye" x="20.5" y="20" width="7" height="11" rx="1.2" fill="#F4F3EE"/><rect class="eye" x="36.5" y="20" width="7" height="11" rx="1.2" fill="#F4F3EE"/></g></svg>
+        <span>Bindery</span>
+      </a>
+      <nav class="bar__nav" aria-label="Main">
+        <ul>
+          {nav.map((n) => (
+            <li><a class="sweep" href={n.href} aria-current={path === norm(n.href) ? 'page' : undefined}><span>{n.label}</span></a></li>
+          ))}
+          <li><a class="sweep" href={site.repo}><span>GitHub</span></a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <slot name="footer" />
+
+    <script>
+      import { start } from '../engine/astro';
+      import { setupMotion } from '../motion/setup';
+      start(setupMotion);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+---
+// A full-bleed LED ticker sign: two rows of real dot cells, rasterised with the app's 5x7 font.
+// The motion (src/motion/home.ts) steps the rows; this markup is the complete static sign.
+import '../../styles/home-sections.css';
+import { textGrid } from '../../lib/matrix';
+
+const ROW_A = 'pr-review · release-notes · polish · dev-setup · tidy-commits · changelog · test-plan';
+const ROW_B = 'bindery list   bindery resolve pr-review --keep claude   bindery library export ui-kit   bindery undo';
+const GAP = 10; // blank cells between the two copies of a row
+
+// The middle dot is not in the font, so it gets its own glyph.
+const DOT = Array.from({ length: 7 }, (_, y) => Array.from({ length: 5 }, (_, x) => y === 3 && x === 2));
+
+/** Columns of lit cells, cols[x][y], with one blank column after each character. */
+function columns(text: string): boolean[][] {
+  const cols: boolean[][] = [];
+  for (const ch of text) {
+    const g = ch === '·' ? DOT : textGrid(ch, 1);
+    for (let x = 0; x < 5; x++) cols.push(g.map((row) => row[x]));
+    cols.push(Array(7).fill(false));
+  }
+  return cols;
+}
+
+/** One square path per lit cell, in cell units (1 unit = one cell pitch). */
+function cellPath(cols: boolean[][]): string {
+  let d = '';
+  cols.forEach((col, x) => col.forEach((on, y) => { if (on) d += `M${x + 0.12} ${y + 0.12}h.76v.76h-.76z`; }));
+  return d;
+}
+
+const rows = [ROW_A, ROW_B].map((text, i) => {
+  const cols = columns(text);
+  return { id: `ticker-${i}`, d: cellPath(cols), copy: cols.length + GAP };
+});
+---
+<div class="ticker" data-ticker aria-hidden="true">
+  {rows.map((r) => (
+    <div class="ticker__row" data-ticker-row data-copy={r.copy}>
+      <svg class="ticker__track" data-ticker-track style={`--w:${r.copy * 2}`} viewBox={`0 0 ${r.copy * 2} 7`} focusable="false">
+        <defs><path id={r.id} d={r.d} /></defs>
+        <use href={`#${r.id}`} x="0" />
+        <use href={`#${r.id}`} x={r.copy} />
+      </svg>
+    </div>
+  ))}
+</div>
+<p class="sr-only">
+  Bindery's ticker lists skills: pr-review, release-notes, polish, dev-setup, tidy-commits, changelog and test-plan.
+  It also shows commands: bindery list, bindery resolve pr-review --keep claude, bindery library export ui-kit, and bindery undo.
+</p>

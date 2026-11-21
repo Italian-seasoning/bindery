@@ -1,0 +1,107 @@
+---
+// The homepage's signature hero: a pinned dot-matrix stage. Skill chips fly from three folders, stacked
+// in one column, into the library card beside them (motion in src/motion/bind.ts). The field, folders and
+// card are decorative and hidden from assistive tech; the headline, lede and links are the real content.
+// Without motion (no JS, or reduced motion) html:not(.motion) shows the end state, from CSS alone.
+import Readout from '../Readout.astro';
+import { site } from '../../data/site';
+import '../../styles/home-bind.css';
+
+const clusters = [
+  {
+    path: '~/.claude/skills',
+    chips: [
+      { id: 'pr-claude', name: 'pr-review' },
+      { id: 'release-notes', name: 'release-notes' },
+      { id: 'polish', name: 'polish' },
+    ],
+  },
+  {
+    path: '~/.codex/skills',
+    chips: [
+      { id: 'pr-codex', name: 'pr-review', amber: true },
+      { id: 'tidy-commits', name: 'tidy-commits' },
+      { id: 'dev-setup', name: 'dev-setup' },
+    ],
+  },
+  {
+    path: '~/.agents/skills',
+    chips: [
+      { id: 'figma-notes', name: 'figma-notes' },
+      { id: 'changelog', name: 'changelog' },
+      { id: 'test-plan', name: 'test-plan' },
+    ],
+  },
+];
+
+// The library rows, in landing order. Row 0 is the merged pr-review.
+const rows = [
+  { name: 'pr-review', meta: 'merged' },
+  { name: 'release-notes', meta: 'claude' },
+  { name: 'polish', meta: 'claude' },
+  { name: 'tidy-commits', meta: 'codex' },
+  { name: 'dev-setup', meta: 'codex' },
+  { name: 'figma-notes', meta: 'agents' },
+  { name: 'changelog', meta: 'agents' },
+  { name: 'test-plan', meta: 'agents' },
+];
+---
+<section class="bind" data-bind aria-labelledby="bind-title">
+  <div class="bind__stage" data-bind-stage>
+    <div class="bind__dots" aria-hidden="true"></div>
+    <div class="bind__lit" aria-hidden="true" data-bind-lit></div>
+
+    <div class="bind__inner">
+      <div class="bind__copy">
+        <h1 id="bind-title" class="bind__title">One library for every skill your agents read.</h1>
+        <p class="bind__lede">Bindery finds the skills Claude Code and Codex keep in three folders, settles the copies that disagree, and binds the good ones into a library you can share.</p>
+        <div class="bind__actions">
+          <a class="key" href={site.repo}><span class="key__cap"><span class="key__label">Get Bindery</span></span></a>
+          <a class="sweep sweep--quiet" href="/story/"><span>Read the story</span></a>
+        </div>
+      </div>
+
+      <div class="bind__unit" aria-hidden="true" data-bind-unit>
+        <div class="bind__folders">
+          {clusters.map((c) => (
+            <div class="bind__cluster" data-bind-cluster>
+              <p class="bind__path" data-bind-path>{c.path}</p>
+              <div class="bind__folder" data-bind-folder>
+                {c.chips.map((ch) => (
+                  <span class={`bind__chip${ch.amber ? ' bind__chip--amber' : ''}`} data-bind-chip={ch.id}>
+                    {ch.name}{ch.amber && <i class="bind__mark">differs</i>}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="bind__lib" data-bind-lib>
+          <div class="bind__lib-head">
+            <p class="bind__lib-name">ui-kit/</p>
+            <Readout face="look-left" label="" class="bind__face bind__face--start" data-agent="look" data-bind-face />
+            <Readout face="happy" label="" class="bind__face bind__face--end" />
+          </div>
+          <Readout text="0 ITEMS" glyphs={8} label="" class="bind__count bind__count--start" data-bind-count />
+          <Readout text="8 ITEMS" glyphs={8} label="" class="bind__count bind__count--end" />
+          <ol class="bind__rows">
+            {rows.map((r, i) => (
+              <li class="bind__row" data-bind-row>
+                <span class="bind__name" data-bind-slot>{r.name}</span>
+                {i === 0 ? (
+                  <span class="bind__note-wrap">
+                    <span class="bind__note bind__note--pre">claude + codex</span>
+                    <span class="bind__note bind__note--merged">merged</span>
+                  </span>
+                ) : (
+                  <span class="bind__note">{r.meta}</span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

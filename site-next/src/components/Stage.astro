@@ -1,0 +1,87 @@
+---
+// The sticky stage the narrator looks at. Its state (1 to 7) is set by src/motion/story.ts.
+// Hidden from assistive tech: the chapter text beside it carries the whole story.
+// The "lit" items are the ones each readout word refers to; their look lives in src/styles/stage-sync.css.
+import Readout from './Readout.astro';
+import '../styles/stage-sync.css';
+---
+<div class="stage" data-stage data-state="1" aria-hidden="true">
+  <div class="stage__head">
+    <Readout face="look-left" text="LOOKING" glyphs={8} label="" class="stage__readout" data-agent="look" />
+    <span class="stage__who">the agent</span>
+  </div>
+
+  <div class="stage__body">
+    <!-- 1 to 3: the three folders the agent searches -->
+    <div class="layer layer--fs">
+      <section class="dir lit" style="--i:0">
+        <div class="dir__app">Claude Code</div>
+        <div class="dir__path">~/.claude/skills</div>
+        <ul>
+          <li class="row row--pr row--kept row--pick lit"><span class="row__name">pr-review</span><span class="row__note row__note--drift">differs</span><span class="row__note row__note--kept">kept</span></li>
+          <li class="row row--pick lit"><span class="row__name">release-notes</span></li>
+          <li class="row row--pick lit"><span class="row__name">polish</span></li>
+        </ul>
+      </section>
+      <section class="dir lit" style="--i:1">
+        <div class="dir__app">Codex</div>
+        <div class="dir__path">~/.codex/skills</div>
+        <ul>
+          <li class="row row--pr row--linked lit"><span class="row__name">pr-review</span><span class="row__note row__note--drift">differs</span><span class="row__link">-&gt; ~/.claude/skills/pr-review</span></li>
+          <li class="row"><span class="row__name">tidy-commits</span></li>
+        </ul>
+      </section>
+      <section class="dir lit" style="--i:2">
+        <div class="dir__app">Shared</div>
+        <div class="dir__path">~/.agents/skills</div>
+        <ul>
+          <li class="row row--pick lit"><span class="row__name">dev-setup</span></li>
+          <li class="row"><span class="row__name">figma-notes</span></li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- 2: what drifted -->
+    <div class="layer layer--diff">
+      <div class="diff">
+        <div class="diff__title">pr-review/SKILL.md, line 6</div>
+        <div class="diff__line diff__line--a lit" style="--i:0"><span>Claude Code</span>Read the diff first, then the tests.</div>
+        <div class="diff__line diff__line--b lit" style="--i:1"><span>Codex</span>Read the tests first, then the diff.</div>
+      </div>
+    </div>
+
+    <!-- 4 and 5: the library, then the share -->
+    <div class="layer layer--lib">
+      <div class="lib">
+        <div class="lib__name">ui-kit/</div>
+        <ul class="tree">
+          <li><span>library.json</span><em>4 items, MIT</em></li>
+          <li class="lit" style="--i:0"><span>skills/pr-review/</span><em>from ~/.claude/skills</em></li>
+          <li class="lit" style="--i:1"><span>skills/release-notes/</span><em>from ~/.claude/skills</em></li>
+          <li class="lit" style="--i:2"><span>skills/polish/</span><em>from ~/.claude/skills</em></li>
+          <li class="lit" style="--i:3"><span>skills/dev-setup/</span><em>from ~/.agents/skills</em></li>
+          <li><span>README.md</span><em>written for whoever opens it</em></li>
+        </ul>
+      </div>
+      <div class="share">
+        <div class="share__line lit" style="--i:0"><span>$</span> bindery library export ui-kit ~/Desktop/ui-kit</div>
+        <div class="share__line lit" style="--i:1"><span>$</span> git push</div>
+        <div class="share__to lit" style="--i:2">github.com/owner/ui-kit</div>
+      </div>
+    </div>
+
+    <!-- 6 and 7: a friend's import preview -->
+    <div class="layer layer--friend">
+      <div class="friend">
+        <div class="friend__head">Import <span>owner/ui-kit</span></div>
+        <ul>
+          <li class="pick pick--on" style="--i:0"><i></i><span>pr-review</span><b class="tag tag--ok">clean</b><b class="tag tag--done">installed</b></li>
+          <li class="pick pick--on" style="--i:1"><i></i><span>release-notes</span><b class="tag tag--ok">clean</b><b class="tag tag--done">installed</b></li>
+          <li class="pick pick--on" style="--i:2"><i></i><span>polish</span><b class="tag tag--ok">clean</b><b class="tag tag--done">installed</b></li>
+          <li class="pick pick--risk lit" style="--i:3"><i></i><span>dev-setup</span><b class="tag tag--high">high</b><small>curl … | sh in scripts/setup.sh</small></li>
+        </ul>
+        <div class="friend__foot"><span class="friend__cta">Install 3 selected</span><span class="friend__undo">3 installed. <kbd>U</kbd> to undo</span></div>
+      </div>
+    </div>
+  </div>
+</div>
