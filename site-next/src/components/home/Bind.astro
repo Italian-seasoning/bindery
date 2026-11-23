@@ -4,7 +4,7 @@
 // card are decorative and hidden from assistive tech; the headline, lede and links are the real content.
 // Without motion (no JS, or reduced motion) html:not(.motion) shows the end state, from CSS alone.
 import Readout from '../Readout.astro';
-import { site } from '../../data/site';
+import { site, withBase } from '../../data/site';
 import '../../styles/home-bind.css';
 
 const clusters = [
@@ -57,7 +57,7 @@ const rows = [
         <p class="bind__lede">Bindery finds the skills Claude Code and Codex keep in three folders, settles the copies that disagree, and binds the good ones into a library you can share.</p>
         <div class="bind__actions">
           <a class="key" href={site.repo}><span class="key__cap"><span class="key__label">Get Bindery</span></span></a>
-          <a class="sweep sweep--quiet" href="/story/"><span>Read the story</span></a>
+          <a class="sweep sweep--quiet" href={withBase('/story/')}><span>Read the story</span></a>
         </div>
       </div>
 

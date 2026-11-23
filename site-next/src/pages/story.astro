@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Readout from '../components/Readout.astro';
 import Stage from '../components/Stage.astro';
 import Footer from '../components/Footer.astro';
-import { site, chapters } from '../data/site';
+import { site, chapters, withBase } from '../data/site';
 
 ---
 <Base title="The story" description="How one agent's skills got scattered across three folders, and how a library brought them back.">
@@ -51,7 +51,7 @@ import { site, chapters } from '../data/site';
       <p class="invite__lede">Bindery is free, local and MIT licensed. The home page shows what each part does, with the command for it.</p>
       <div class="hero__actions">
         <a class="key" href={site.repo}><span class="key__cap"><span class="key__label">Get Bindery</span></span></a>
-        <a class="sweep sweep--quiet" href="/"><span>Back home</span></a>
+        <a class="sweep sweep--quiet" href={withBase('/')}><span>Back home</span></a>
       </div>
     </div>
   </section>

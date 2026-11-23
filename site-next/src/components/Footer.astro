@@ -1,13 +1,13 @@
 ---
 import Readout from './Readout.astro';
-import { site, nav } from '../data/site';
+import { site, nav, withBase } from '../data/site';
 ---
 <footer class="foot">
   <Readout text="BINDERY" glyphs={7} label="Bindery" class="foot__sign" data-sign />
   <div class="foot__row">
     <p class="foot__line">Free and open source under the MIT licence. Runs on your machine.</p>
     <ul class="foot__links">
-      {nav.map((n) => <li><a class="sweep" href={n.href}><span>{n.label}</span></a></li>)}
+      {nav.map((n) => <li><a class="sweep" href={withBase(n.href)}><span>{n.label}</span></a></li>)}
       <li><a class="sweep" href={site.repo}><span>Source on GitHub</span></a></li>
       <li><a class="sweep" href={`${site.repo}/issues`}><span>Report an issue</span></a></li>
     </ul>

@@ -5,11 +5,14 @@
 export const site = {
   name: 'Bindery',
   role: 'Skill libraries for Claude Code and Codex',
-  url: 'https://bindery.dev',
+  url: 'https://italian-seasoning.github.io/bindery/',
   repo: 'https://github.com/Italian-seasoning/bindery',
   description:
     'Bindery gathers the skills and prompts Claude Code and Codex read into libraries you can share, import after a safety check, and undo. Free, local, MIT.',
 };
+
+/** Prefix a site path ('/story/') with the deploy base ('/bindery'). */
+export const withBase = (p: string) => import.meta.env.BASE_URL.replace(/\/+$/, '') + p;
 
 export const nav = [
   { href: '/', label: 'Home' },

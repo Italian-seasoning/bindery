@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import Bind from '../components/home/Bind.astro';
 import Ticker from '../components/home/Ticker.astro';
 import Verbs from '../components/home/Verbs.astro';
-import { facts } from '../data/site';
+import { facts, withBase } from '../data/site';
 ---
 <Base>
   <Bind />
@@ -26,7 +26,7 @@ import { facts } from '../data/site';
     <div class="invite__copy">
       <h2 id="invite-title" class="invite__title">Want the long version?</h2>
       <p class="invite__lede">One agent tells how its skills ended up in three folders, and how a library brought them back.</p>
-      <a class="sweep" href="/story/"><span>Read the story</span></a>
+      <a class="sweep" href={withBase('/story/')}><span>Read the story</span></a>
     </div>
   </section>
 
